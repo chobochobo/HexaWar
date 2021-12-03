@@ -13,9 +13,10 @@ public class HexMap : MonoBehaviour
     public GameObject[] MagicStone;
     public GameObject hexPrefabs;
     //配列の大きさを定義。
-    private int width = 17;
-    private int height =  10;
-    public GameObject[,] hexArray = new GameObject[17, 10];
+    private int width = 12;
+    private int height = 8;
+    public GameObject[,] hexArray = new GameObject[12, 8];
+
     //六角形のサイズ
     private float Hex_Height;
     private float Hex_Adjust;
@@ -63,9 +64,32 @@ public class HexMap : MonoBehaviour
                 DTex.transform.position = Cal_HexPosToViewLocalPos(vec2);
             }
         }
-        CheckStartset();
+       // CheckStartset();
     }
 
+    //六角形のいちに調整
+    public Vector3 Cal_HexPosToViewLocalPos(Vector2 hexPos)
+    {
+        // Y方向高さ
+        Hex_Height = Hex_Width * Mathf.Sin(60.0f * Mathf.Deg2Rad);
+
+        // X方向のずれ
+        Hex_Adjust = Hex_Width * Mathf.Cos(60.0f * Mathf.Deg2Rad);
+
+        float grid_X = Hex_Width * hexPos.x + Hex_Adjust * Mathf.Abs(hexPos.y % 2);
+        float grid_Y = Hex_Height * hexPos.y;
+
+        return new Vector3(grid_X, grid_Y, 0.0f);
+    }
+    //キャンディを操作できないようにする。
+    public void StopCandies()
+    {
+        foreach (var item in hexArray)
+        {
+            item.GetComponent<MSMove>().isMoving = true;
+        }
+    }
+    /*
     void CheckStartset()
     {
         //下の行からヨコのつながりを確認
@@ -145,7 +169,7 @@ public class HexMap : MonoBehaviour
                     int r = Random.Range(0, 5);
                     var candy = Instantiate(MagicStone[r]);
                     //見た目の処理
-                    candy.transform.position = new Vector2(i, j + 0.3f);
+                    candy.transform.position = Cal_HexPosToViewLocalPos(new Vector2(i, j + 0.3f));
                     //内部管理の処理
                     hexArray[i, j] = candy;
                 }
@@ -161,9 +185,7 @@ public class HexMap : MonoBehaviour
             //新しい位置をmyPreviousPosに設定
             foreach (var item in hexArray)
             {
-                int column = (int)item.transform.position.x;
-                int row = (int)item.transform.position.y;
-                item.GetComponent<MSMove>().myPreviousPos = new Vector2(column, row);
+                item.GetComponent<MSMove>().myPreviousPos = Cal_HexPosToViewLocalPos(item.transform.position);
             }
             //続けざまに３つそろっているかどうか判定。
             Invoke("CheckMatching", 0.2f);
@@ -171,20 +193,6 @@ public class HexMap : MonoBehaviour
         }
 
     }
-    public Vector3 Cal_HexPosToViewLocalPos(Vector2 hexPos)
-    {
-        // Y方向高さ
-        Hex_Height = Hex_Width * Mathf.Sin(60.0f * Mathf.Deg2Rad);
-
-        // X方向のずれ
-        Hex_Adjust = Hex_Width * Mathf.Cos(60.0f * Mathf.Deg2Rad);
-
-        float grid_X = Hex_Width * hexPos.x + Hex_Adjust * Mathf.Abs(hexPos.y % 2);
-        float grid_Y = Hex_Height * hexPos.y;
-
-        return new Vector3(grid_X, grid_Y, 0.0f);
-    }
-
 
     public void CheckMatching()
     {
@@ -207,15 +215,10 @@ public class HexMap : MonoBehaviour
         //左の列からタテのつながりを確認
         for (int i = 0; i < width; i++)
         {
-
             //上から２つ目以降は確認不要。
-
             for (int j = 0; j < height - 2; j++)
-
             {
-
                 //Ｙ座標がｊ。
-
                 if ((hexArray[i, j].tag == hexArray[i, j + 1].tag) && (hexArray[i, j].tag == hexArray[i, j + 2].tag))
                 {
                     hexArray[i, j].GetComponent<MSMove>().isMatching = true;
@@ -267,26 +270,18 @@ public class HexMap : MonoBehaviour
             Destroy(item);
             hexArray[(int)item.transform.position.x, (int)item.transform.position.y] = null;
         }
-
         //Listを空っぽに。
         deleteList.Clear();
         //キャンディの落下を待って、空欄に新しいキャンディを入れる。
         Invoke("SpawnNewCandy", 1.2f);
     }
 
-    //キャンディを操作できないようにする。
-    public void StopCandies()
-    {
-        foreach (var item in hexArray)
-        {
-            item.GetComponent<MSMove>().isMoving = true;
-        }
-    }
+    
     void CanMoveCandies()
     {
         foreach (var item in hexArray)
         {
             item.GetComponent<MSMove>().isMoving = false;
         }
-    }
+    }*/
 }

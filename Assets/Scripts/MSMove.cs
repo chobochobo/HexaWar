@@ -22,21 +22,18 @@ public class MSMove : MonoBehaviour
     //移動前の座標
     public Vector2 myPreviousPos;
     void Start()
-
     {
-
         HexMapCS = FindObjectOfType<HexMap>();
-
         //自分の位置を座標配列の番号（Index)にあてておく。
-        column = (int)transform.position.x;
-        row = (int)transform.position.y;
         //スタート位置を記録する。
-        myPreviousPos = new Vector2(column, row);
-
-    }//指をおいたとき
+        myPreviousPos = transform.position;
+    }
+    //指をおいたとき
     private void OnMouseDown()
     {
         fingerDown = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //２点のベクトルの差を計算
+        distance = fingerUp - fingerDown;
     }
 
     //指を離したとき
@@ -47,8 +44,6 @@ public class MSMove : MonoBehaviour
             return;
         }
         fingerUp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //２点のベクトルの差を計算
-        distance = fingerUp - fingerDown;
         moveCandies();
 
     }
@@ -71,6 +66,7 @@ public class MSMove : MonoBehaviour
                 column += 1;
             }
         }
+
         //左にスワイプしていたなら。
         if (distance.x < 0 && Mathf.Abs(distance.x) > Mathf.Abs(distance.y))
         {
@@ -85,6 +81,7 @@ public class MSMove : MonoBehaviour
                 column -= 1;
             }
         }
+
         //上にスワイプしていたなら。
         if (distance.y >= 0 && Mathf.Abs(distance.x) < Mathf.Abs(distance.y))
         {
@@ -100,6 +97,7 @@ public class MSMove : MonoBehaviour
                 row += 1;
             }
         }
+
         //下にスワイプしていたなら。
         if (distance.y < 0 && Mathf.Abs(distance.x) < Mathf.Abs(distance.y))
         {
@@ -116,9 +114,9 @@ public class MSMove : MonoBehaviour
             }
         }
         //0.5秒後にマッチしてるかチェック
-
         Invoke("DoCheckMatching", 0.5f);
     }
+    /*
     //CandyArray配列に、自身を格納する。
     public void SetCandyToArray()
     {
@@ -137,7 +135,7 @@ public class MSMove : MonoBehaviour
             //目的地との距離が0.1fより小さくなったら。
             if (Mathf.Abs(dif.magnitude) < 0.1f)
             {
-                transform.position = new Vector2(column, row);
+                transform.position = HexMapCS.Cal_HexPosToViewLocalPos(new Vector2(column, row));
                 //自身をCandyArray配列に格納する。
                 SetCandyToArray();
 
@@ -146,7 +144,6 @@ public class MSMove : MonoBehaviour
         else if (row > 0 && HexMapCS.hexArray[column, row - 1] == null)
         {
             FallCandy();
-
         }
     }
     void FallCandy()
@@ -166,5 +163,6 @@ public class MSMove : MonoBehaviour
         column = (int)myPreviousPos.x;
         row = (int)myPreviousPos.y;
     }
+    */
 }
 
