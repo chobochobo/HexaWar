@@ -4,6 +4,7 @@ using UnityEngine;
 
 using UnityEngine.UI;
 
+//画面内の描画を司る処理
 public class HexMap : MonoBehaviour
 {
 
@@ -17,28 +18,49 @@ public class HexMap : MonoBehaviour
     private int height = 8;
     public GameObject[,] hexArray = new GameObject[12, 8];
 
-    //六角形のサイズ
+    //魔石の配列
+    public GameObject[,] MSArray = new GameObject[12, 8];
+    //魔石の大きさ
+    private float MS_Width = 0.8f;
+
+    //六角形のサイズMS
     private float Hex_Height;
     private float Hex_Adjust;
     private float Hex_Width = 1.0f;
 
+
+    //持てたかどうか
+    private bool GetFlag;
+    //持ってるオブジェクト
+    public GameObject GetObject ;
+
+    //持ったときの場所
+    public Vector3 GetPosition;
 
     private bool isStart;
     private List<GameObject> deleteList = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
+        //持っているゲームオブジェクトの初期化
+        GetObject = new GameObject();
+        //Getフラグを初期化
+        GetFlag = false;
         CreateHex();
-
     }
-
+   public float  dt;
     // Update is called once per frame
     void Update()
     {
-        
+        dt += Time.deltaTime;
+        if (dt > 3)
+        {
+            dt = 0.0f;
+            Debug.Log("" + MSArray[1, 1].transform.position);
+        }
     }
 
-    void CreateHex()
+   public void CreateHex()
     {
         for (int i = 0; i < width; i++)
         {
@@ -51,20 +73,23 @@ public class HexMap : MonoBehaviour
                 //魔石を生成
                 GameObject MS = Instantiate(MagicStone[r]);
                 MS.transform.position = Cal_HexPosToViewLocalPos(vec2);
-                hexArray[i, j] = MS;
+                MS.name = i+":" + j;
+                MSArray[i, j] = MS;
 
                 //HEXを生成
                 GameObject hex = Instantiate(hexPrefabs);
                 hex.transform.position = Cal_HexPosToViewLocalPos(vec2);
+                hex.name = i + ":" + j;
 
                 //デバッグ用のテキストを生成
+                /*
                 GameObject DTex = Instantiate(DebugText);
                 DTex.transform.SetParent(canvas.transform, false);
                 DTex.GetComponent<Text>().text = i + ":" + j;
                 DTex.transform.position = Cal_HexPosToViewLocalPos(vec2);
+                */
             }
         }
-       // CheckStartset();
     }
 
     //六角形のいちに調整
@@ -81,207 +106,81 @@ public class HexMap : MonoBehaviour
 
         return new Vector3(grid_X, grid_Y, 0.0f);
     }
-    //キャンディを操作できないようにする。
-    public void StopCandies()
+
+
+
+    //魔石を動かす
+    public void MoveMagicStone()
     {
-        foreach (var item in hexArray)
+        //指の位置
+        Vector2 TouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //掴んだものを一番手前にする
+        Vector3 vec3 = new Vector3(TouchPosition.x, TouchPosition.y, -1);
+        //持ってるゲームオブジェクト
+        //押したかどうかの判定
+        if (Input.GetMouseButtonDown(0) && GetFlag == false)
         {
-            item.GetComponent<MSMove>().isMoving = true;
-        }
-    }
-    /*
-    void CheckStartset()
-    {
-        //下の行からヨコのつながりを確認
-        for (int i = 0; i < height; i++)
-        {
-            //右から２つ目以降は確認不要（width-2）
-            for (int j = 0; j < width - 2; j++)
+            for (int i = 0; i < width; i++)
             {
-                //同じタグのキャンディが３つ並んでいたら。Ｘ座標がｊなので注意。
-                //念のため、ふたつの式それぞれをカッコで囲んでいる。
-                if ((hexArray[j, i].tag == hexArray[j + 1, i].tag) && (hexArray[j, i].tag == hexArray[j + 2, i].tag))
+                for (int j = 0; j < height; j++)
                 {
-                    //CandyのisMatchingをtrueに//CandyのisMatchingをtrueに
-
-                    hexArray[j, i].GetComponent<MSMove>().isMatching = true;
-                    hexArray[j + 1, i].GetComponent<MSMove>().isMatching = true;
-                    hexArray[j + 2, i].GetComponent<MSMove>().isMatching = true;
-                }
-
-            }
-
-        }//
-        //左の列からタテのつながりを確認
-        for (int i = 0; i < width; i++)
-        {
-            //上から２つ目以降は確認不要。height-2
-            for (int j = 0; j < height - 2; j++)
-            {
-                //Ｙ座標がｊ。
-                if ((hexArray[i, j].tag == hexArray[i, j + 1].tag) && (hexArray[i, j].tag == hexArray[i, j + 2].tag))
-                {
-                    hexArray[i, j].GetComponent<MSMove>().isMatching = true;
-                    hexArray[i, j + 1].GetComponent<MSMove>().isMatching = true;
-                    hexArray[i, j + 2].GetComponent<MSMove>().isMatching = true;
-
+                    if (PointCircleHitCheck(TouchPosition, MSArray[i, j], MS_Width))
+                    {
+                        GetPosition = MSArray[i, j].transform.position;
+                        GetObject = MSArray[i, j];
+                        Debug.Log(""+GetObject.name);
+                        GetFlag = true;
+                        break;
+                    }
                 }
             }
         }
-        //isMatching=trueのものをＬｉｓｔに入れる
-        foreach (var item in hexArray)
+        else
+        if (Input.GetMouseButton(0) && GetFlag)
         {
-            if (item.GetComponent<MSMove>().isMatching)
-            {
-                deleteList.Add(item);
-            }
+            GetObject.transform.position = vec3;
         }
-        //List内にキャンディがある場合
-        if (deleteList.Count > 0)
+        else
+        if (Input.GetMouseButtonUp(0))
         {
-            //該当する配列をnullにして（内部管理）、キャンディを消去する（見た目）。
-            foreach (var item in deleteList)
+            if (GetFlag)
             {
-                hexArray[(int)item.transform.position.x, (int)item.transform.position.y] = null;
-                Destroy(item);
-            }
-
-            //Listを空っぽに。
-            deleteList.Clear();
-            //空欄に新しいキャンディを入れる。
-            SpawnNewMS();
-        }
-        else//Listにキャンディがない場合。
-        {
-            //ゲーム開始。
-            isStart = true;
-        }
-    }
-
-    void SpawnNewMS()
-    {
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                if (hexArray[i, j] == null)
+                for (int i = 0; i < width; i++)
                 {
-                    int r = Random.Range(0, 5);
-                    var candy = Instantiate(MagicStone[r]);
-                    //見た目の処理
-                    candy.transform.position = Cal_HexPosToViewLocalPos(new Vector2(i, j + 0.3f));
-                    //内部管理の処理
-                    hexArray[i, j] = candy;
+                    for (int j = 0; j < height; j++)
+                    {
+                        if (PointCircleHitCheck(TouchPosition, MSArray[i, j], MS_Width))
+                        {//入れ替え処理？
+                            GetObject.transform.position = MSArray[i, j].transform.position;
+                            MagicStoneChange(i, j, GetPosition);
+                            break;
+                        }
+                    }
                 }
             }
-        }
-        //まだゲーム開始してないときは３つ揃ってないか確認。
-        if (isStart == false)
-        {
-            CheckStartset();
-        }
-        else　//isStart==trueのとき。
-        {
-            //新しい位置をmyPreviousPosに設定
-            foreach (var item in hexArray)
-            {
-                item.GetComponent<MSMove>().myPreviousPos = Cal_HexPosToViewLocalPos(item.transform.position);
-            }
-            //続けざまに３つそろっているかどうか判定。
-            Invoke("CheckMatching", 0.2f);
-
-        }
-
-    }
-
-    public void CheckMatching()
-    {
-        //下の行からヨコのつながりを確認
-        for (int i = 0; i < height; i++)
-        {
-            //右から２つ目以降は確認不要
-            for (int j = 0; j < width - 2; j++)
-            {
-                //同じタグのキャンディが３つ並んでいたら。Ｘ座標がｊ。
-                if ((hexArray[j, i].tag == hexArray[j + 1, i].tag) && (hexArray[j, i].tag == hexArray[j + 2, i].tag))
-                {
-                    //CandyのisMatchingをtrueに
-                    hexArray[j, i].GetComponent<MSMove>().isMatching = true;
-                    hexArray[j + 1, i].GetComponent<MSMove>().isMatching = true;
-                    hexArray[j + 2, i].GetComponent<MSMove>().isMatching = true;
-                }
-            }
-        }
-        //左の列からタテのつながりを確認
-        for (int i = 0; i < width; i++)
-        {
-            //上から２つ目以降は確認不要。
-            for (int j = 0; j < height - 2; j++)
-            {
-                //Ｙ座標がｊ。
-                if ((hexArray[i, j].tag == hexArray[i, j + 1].tag) && (hexArray[i, j].tag == hexArray[i, j + 2].tag))
-                {
-                    hexArray[i, j].GetComponent<MSMove>().isMatching = true;
-                    hexArray[i, j + 1].GetComponent<MSMove>().isMatching = true;
-                    hexArray[i, j + 2].GetComponent<MSMove>().isMatching = true;
-
-                }
-
-            }
-
-        }
-        //isMatching=trueのものをＬｉｓｔに入れる
-        foreach (var item in hexArray)
-        {
-            if (item.GetComponent<MSMove>().isMatching)
-            {
-                //３つ以上そろったとき、キャンディを半透明にする。
-                item.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
-                deleteList.Add(item);
-            }
-        }
-        //List内にキャンディがある場合
-        if (deleteList.Count > 0)
-        {
-            //キャンディを消去するとき、一瞬の間を持たせるためIvoke関数にする。
-            Invoke("DeleteCandies", 0.2f);
-        }
-        //List内にキャンディがある場合
-        if (deleteList.Count > 0)
-        {
-            Invoke("DeleteCandies", 0.2f);
-        }
-        else//Listにキャンディがない場合。
-        {
-            //いま位置交換したキャンディを元の位置に。
-            foreach (var item in hexArray)
-            {
-                item.GetComponent<MSMove>().BackToPreviousPos();
-            }
-            //再びキャンディを操作できるようにする。
-            Invoke("CanMoveCandies", 0.4f);
+            GetFlag = false;
         }
     }
-    void DeleteCandies()
+    //円と点の当たり判定
+   public bool PointCircleHitCheck(Vector2 point,GameObject circle,float Width)
     {
-        //List内のキャンディを消去。かつ、その配列をnullに。
-        foreach (var item in deleteList)
+        float a = point.x - circle.transform.position.x;
+        float b = point.y - circle.transform.position.y;
+        float c = a * a + b * b;
+        float d = Width / 2;
+        if (c <= d * d)
         {
-            Destroy(item);
-            hexArray[(int)item.transform.position.x, (int)item.transform.position.y] = null;
+            return true;
+        }else
+        {
+            return false;
         }
-        //Listを空っぽに。
-        deleteList.Clear();
-        //キャンディの落下を待って、空欄に新しいキャンディを入れる。
-        Invoke("SpawnNewCandy", 1.2f);
     }
 
-    
-    void CanMoveCandies()
+    //入れ替え処理
+    public void MagicStoneChange(int i, int j, Vector2 vec2)
     {
-        foreach (var item in hexArray)
-        {
-            item.GetComponent<MSMove>().isMoving = false;
-        }
-    }*/
+        MSArray[i, j].transform.position = vec2;
+    }
+
 }

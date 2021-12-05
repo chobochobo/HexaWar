@@ -512,6 +512,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1874756167}
   - component: {fileID: 1874756166}
+  - component: {fileID: 1874756168}
   m_Layer: 0
   m_Name: Main Game
   m_TagString: Untagged
@@ -540,6 +541,9 @@ MonoBehaviour:
   - {fileID: 8958277748616049424, guid: 9ff4fdf32897d401e977081ca20f90be, type: 3}
   - {fileID: 4166642928092594340, guid: 2ccef8df1cbc84ff7a99b83e6501e76c, type: 3}
   hexPrefabs: {fileID: 4424566379734075163, guid: 2e2f12dc9e20340c2ab5dac8ff22c024, type: 3}
+  GetObject: {fileID: 0}
+  GetPosition: {x: 0, y: 0, z: 0}
+  dt: 0
 --- !u!4 &1874756167
 Transform:
   m_ObjectHideFlags: 0
@@ -554,3 +558,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1874756168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1874756165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c235de1f74d8941f9a0405ae9d39527e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Seen: 0

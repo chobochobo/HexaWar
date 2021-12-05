@@ -96,10 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21dc1d6dd800a4e12bc4d32e604a7d76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  column: 0
-  row: 0
-  isMoving: 0
-  isMatching: 0
+  TouchOn: 0
   myPreviousPos: {x: 0, y: 0}
 --- !u!61 &8099717352862451791
 BoxCollider2D:
