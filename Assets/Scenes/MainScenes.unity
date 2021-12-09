@@ -534,14 +534,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DebugText: {fileID: 652483477}
   canvas: {fileID: 1720382087}
-  MagicStone:
-  - {fileID: 1373185359276557593, guid: beeb47072387a41199b24005cfaee6b9, type: 3}
-  - {fileID: 7816807765935685708, guid: f4b4f4261db204581946de28dcccbb19, type: 3}
-  - {fileID: 4461992148248804821, guid: 464bbe15d78b34a09b9c4513f4acda3e, type: 3}
-  - {fileID: 8958277748616049424, guid: 9ff4fdf32897d401e977081ca20f90be, type: 3}
-  - {fileID: 4166642928092594340, guid: 2ccef8df1cbc84ff7a99b83e6501e76c, type: 3}
+  MagicStone: {fileID: 4461992148248804821, guid: 464bbe15d78b34a09b9c4513f4acda3e, type: 3}
   hexPrefabs: {fileID: 4424566379734075163, guid: 2e2f12dc9e20340c2ab5dac8ff22c024, type: 3}
   GetObject: {fileID: 0}
+  GetColor: 0
   GetPosition: {x: 0, y: 0, z: 0}
   dt: 0
 --- !u!4 &1874756167
@@ -552,7 +548,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1874756165}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.700263, y: 0.41218665, z: -7.963965}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

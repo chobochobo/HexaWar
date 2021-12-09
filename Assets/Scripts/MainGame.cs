@@ -16,13 +16,11 @@ public class MainGame : MonoBehaviour
 
     public  SeenType Seen = SeenType.FirstTime;
     private HexMap HexMapCS;
-    private MSMove MSMoveCS;
 
     // Start is called before the first frame update
     void Start()
     {
         HexMapCS = FindObjectOfType<HexMap>();
-        MSMoveCS = FindObjectOfType<MSMove>();
     }
 
     // Update is called once per frame
@@ -31,13 +29,51 @@ public class MainGame : MonoBehaviour
        switch(Seen)
         {
             case SeenType.FirstTime:
-                Seen = SeenType.Move;
-                Debug.Log("NoTouchにいく");
+                //全マスをCheck
+                HexMapCS.MSCheck();
+                //消すところがないか
+                if (HexMapCS.Setflag())
+                {
+                    Debug.Log("Moveにいく");
+                    //タッチできるように
+                    Seen = SeenType.Move;
+                }
+                else
+                {
+                    //消して再度再生
+                    HexMapCS.MSReincarnation();
+                }
+                
+
                 break;
             case SeenType.Move:
                 HexMapCS.MoveMagicStone();
+                //動かし終わったらTouchReleaseに移動
+                if (HexMapCS.GetGoodRelease())
+                {
+                    HexMapCS.SetGoodRelease(false);
+                    Debug.Log("Moveにいく");
+                    //タッチできるように
+                    Seen = SeenType.TouchRelease;
+                }
+
                 break;
             case SeenType.TouchRelease:
+                //全マスをCheck
+                HexMapCS.MSCheck();
+                //消すところがないか
+                if (HexMapCS.Setflag())
+                {
+                    Debug.Log("Moveにいく");
+                    //タッチできるように
+                    Seen = SeenType.Move;
+                }
+                else
+                {
+                    //消して再度再生
+                    HexMapCS.MSReincarnation();
+                }
+
                 break;
             case SeenType.DeleteProcess:
                 break;
