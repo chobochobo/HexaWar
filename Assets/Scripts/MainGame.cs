@@ -52,7 +52,7 @@ public class MainGame : MonoBehaviour
                 if (HexMapCS.GetGoodRelease())
                 {
                     HexMapCS.SetGoodRelease(false);
-                    Debug.Log("Moveにいく");
+                    Debug.Log("TouchReleaseにいく");
                     //タッチできるように
                     Seen = SeenType.TouchRelease;
                 }

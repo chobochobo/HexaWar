@@ -513,6 +513,7 @@ GameObject:
   - component: {fileID: 1874756167}
   - component: {fileID: 1874756166}
   - component: {fileID: 1874756168}
+  - component: {fileID: 1874756169}
   m_Layer: 0
   m_Name: Main Game
   m_TagString: Untagged
@@ -538,7 +539,9 @@ MonoBehaviour:
   hexPrefabs: {fileID: 4424566379734075163, guid: 2e2f12dc9e20340c2ab5dac8ff22c024, type: 3}
   GetObject: {fileID: 0}
   GetColor: 0
+  GoodRelease: 0
   GetPosition: {x: 0, y: 0, z: 0}
+  SetCheck: 0
   dt: 0
 --- !u!4 &1874756167
 Transform:
@@ -567,3 +570,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Seen: 0
+--- !u!114 &1874756169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1874756165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe5246e6617e443e7b8bf3cb48b657fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ComboCounter: 0
