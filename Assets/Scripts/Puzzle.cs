@@ -34,7 +34,7 @@ public class Puzzle : MonoBehaviour
        { 1,1,1,1,1,1,1,1,1,1,1,1}
     };
 
-
+    //Puzzleデバッグ用盤面
     public int[,] ColorFlag = new int[,]
     {
        { 1,1,1,1,1,1,1,1,1,1,1,1},
@@ -65,7 +65,7 @@ public class Puzzle : MonoBehaviour
         {1,0,2,0,1,0,2,0 },//右奇数,偶数
         {1,-1,1,-2,0,-1,1,-2 },//右下奇数,偶数
         {0,-1,-1,-2,-1,-1,-1,-2 },//左下奇数,偶数
-        {-1,0,-2,0,0,-1,0,-2 },//左奇数,偶数
+        {-1,0,-2,0,-1,0,-2,0 },//左奇数,偶数
         {0,1,-1,2,-1,1,-1,2 }//左上奇数,奇数
       };
     // Start is called before the first frame update
@@ -166,16 +166,16 @@ public class Puzzle : MonoBehaviour
             if (IDy % 2 == 1)
             {
                 //同じ色かどうか判定　１個め
-                if (MAPData[IDx, IDy] == MAPData[a, aa])
+                if (MAPData[IDx, IDy] == MAPData[a, aa]&& OutFlag[a,aa]==0)
                 {
                     //同じ色かどうか判定２個め
-                    if (MAPData[IDx, IDy] == MAPData[b, bb])
+                    if (MAPData[IDx, IDy] == MAPData[b, bb] && OutFlag[b, bb] == 0)
                     {
                         //同じ色かどうか判定３個め
-                        if (MAPData[IDx, IDy] == MAPData[ax, aax])
+                        if (MAPData[IDx, IDy] == MAPData[ax, aax] && OutFlag[ax, aax] == 0)
                         {
                             //同じ色かどうか判定４個目
-                            if (MAPData[IDx, IDy] == MAPData[bx, bbx])
+                            if (MAPData[IDx, IDy] == MAPData[bx, bbx] && OutFlag[bx, bbx] == 0)
                             {
                                 //元データ
                                 DeleteData[IDx, IDy] = 1;
@@ -201,10 +201,10 @@ public class Puzzle : MonoBehaviour
                             }
                         }
                     }//同じ色かどうか判定２個め
-                    else  if (MAPData[IDx, IDy] == MAPData[ax, aax])
+                    else  if (MAPData[IDx, IDy] == MAPData[ax, aax] && OutFlag[ax, aax] == 0)
                     {
                         //同じ色かどうか判定３個め
-                        if (MAPData[IDx, IDy] == MAPData[bx, bbx])
+                        if (MAPData[IDx, IDy] == MAPData[bx, bbx] && OutFlag[bx, bbx] == 0)
                         {
                             //元データ
                             DeleteData[IDx, IDy] = 1;
@@ -230,16 +230,16 @@ public class Puzzle : MonoBehaviour
             else if (IDy % 2 == 0)
             {
                 //同じ色かどうか判定１個め
-                if (MAPData[IDx, IDy] == MAPData[c, cc])
+                if (MAPData[IDx, IDy] == MAPData[c, cc] && OutFlag[c,cc] == 0)
                 {
                     //同じ色かどうか判定２個め
-                    if (MAPData[IDx, IDy] == MAPData[d, dd])
+                    if (MAPData[IDx, IDy] == MAPData[d, dd] && OutFlag[d, dd] == 0)
                     {
                         //同じ色かどうか判定３個め
-                        if (MAPData[IDx, IDy] == MAPData[cx, ccx])
+                        if (MAPData[IDx, IDy] == MAPData[cx, ccx] && OutFlag[cx, ccx] == 0)
                         {
                             //同じ色かどうか判定４個目
-                            if (MAPData[IDx, IDy] == MAPData[dx, ddx])
+                            if (MAPData[IDx, IDy] == MAPData[dx, ddx] && OutFlag[dx, ddx] == 0)
                             {
                                 //元データ
                                 DeleteData[IDx, IDy] = 1;
@@ -266,10 +266,10 @@ public class Puzzle : MonoBehaviour
                             }
                         }
                     }//３個め
-                    else  if (MAPData[IDx, IDy] == MAPData[cx, ccx])
+                    else  if (MAPData[IDx, IDy] == MAPData[cx, ccx] && OutFlag[cx, ccx] == 0)
                     {
                         //同じ色かどうか判定４個目
-                        if (MAPData[IDx, IDy] == MAPData[dx, ddx])
+                        if (MAPData[IDx, IDy] == MAPData[dx, ddx] && OutFlag[dx, ddx] == 0)
                         {
                             //元データ
                             DeleteData[IDx, IDy] = 1;

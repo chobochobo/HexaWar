@@ -96,12 +96,12 @@ public class HexMap : MonoBehaviour
                     Vector2 vec2 = new Vector2(i * Hex_Width, j * Hex_Width);
                     //魔石を生成
                     GameObject MS = Instantiate(MagicStone);
-                    MS.GetComponent<MSSprite>().ChangeSprite(PuzzleCS.ColorFlag[i,j]);
+                    MS.GetComponent<MSSprite>().ChangeSprite(r);
                    // MS.GetComponent<MSSprite>().ChengeColor(0f / 255f);
                     MS.transform.position = Cal_HexPosToViewLocalPos(vec2);
                     MS.name = i + ":" + j;
                     MSArray[i, j] = MS;
-                    PuzzleCS.SetMapDate(i, j, PuzzleCS.ColorFlag[i, j]);
+                    PuzzleCS.SetMapDate(i, j, r);
                     //HEXを生成
                     GameObject hex = Instantiate(hexPrefabs);
                     hex.transform.position = Cal_HexPosToViewLocalPos(vec2);
@@ -252,6 +252,7 @@ public class HexMap : MonoBehaviour
                         MSArray[i, j].GetComponent<MSSprite>().ChangeSprite(r);
                         PuzzleCS.SetMapDate(i, j, r);
                         PuzzleCS.SetDeleteDate(i, j, 0);
+                        Debug.Log(i + ":" + j);
                     }
                 }
 
