@@ -128,3 +128,4 @@ MonoBehaviour:
   - {fileID: -8825245182735141496, guid: 9254a48f436714097aab60da3e00e4b7, type: 3}
   - {fileID: -879321355305020738, guid: 9254a48f436714097aab60da3e00e4b7, type: 3}
   - {fileID: 8743689921068890747, guid: 9254a48f436714097aab60da3e00e4b7, type: 3}
+  nowStoneColor: 0

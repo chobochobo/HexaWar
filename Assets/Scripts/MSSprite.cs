@@ -37,5 +37,9 @@ public class MSSprite : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = MSSperite[index];
     }
 
+    public void ChengeColor(float a)
+    {
+        GetComponent<SpriteRenderer>().color = new Color(a, a, a);
+    }
 
 }
