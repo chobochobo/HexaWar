@@ -31,7 +31,7 @@ public class HexMap : MonoBehaviour
     //持てたかどうか
     private bool GetFlag;
     //持ってるオブジェクト
-    public GameObject GetObject ;
+    public GameObject GetObject;
     //掴んだ色
     public int GetColor;
     //うまく離せたか
@@ -46,7 +46,7 @@ public class HexMap : MonoBehaviour
     //PUZZLE呼び出し
     private Puzzle PuzzleCS;
 
-    
+
     //消せるのがあるかないか
     public bool SetCheck;
 
@@ -68,7 +68,7 @@ public class HexMap : MonoBehaviour
 
         CreateHex();
     }
-   public float  dt;
+    public float dt;
     // Update is called once per frame
     void Update()
     {
@@ -76,11 +76,11 @@ public class HexMap : MonoBehaviour
         if (dt > 3)
         {
             dt = 0.0f;
-           // Debug.Log("" + MSArray[1, 1].transform.position);
+            // Debug.Log("" + MSArray[1, 1].transform.position);
         }
     }
     //初期マップを生成
-   public void CreateHex()
+    public void CreateHex()
     {
         for (int i = 0; i < width; i++)
         {
@@ -97,7 +97,7 @@ public class HexMap : MonoBehaviour
                     //魔石を生成
                     GameObject MS = Instantiate(MagicStone);
                     MS.GetComponent<MSSprite>().ChangeSprite(r);
-                   // MS.GetComponent<MSSprite>().ChengeColor(0f / 255f);
+                    // MS.GetComponent<MSSprite>().ChengeColor(0f / 255f);
                     MS.transform.position = Cal_HexPosToViewLocalPos(vec2);
                     MS.name = i + ":" + j;
                     MSArray[i, j] = MS;
@@ -248,14 +248,39 @@ public class HexMap : MonoBehaviour
                 {
                     if (PuzzleCS.GetDeleteDate(i, j) == 1)
                     {
+                        StartCoroutine("Wait");
+
                         int r = Random.Range(0, 5);
                         MSArray[i, j].GetComponent<MSSprite>().ChangeSprite(r);
+                        // MSArray[i, j].SetActive(false);
                         PuzzleCS.SetMapDate(i, j, r);
                         PuzzleCS.SetDeleteDate(i, j, 0);
-                        Debug.Log(i + ":" + j);
                     }
                 }
 
+            }
+        }
+    }
+
+
+    public void DawnDraw()
+    {
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (PuzzleCS.GetDeleteDate(i, j) == 1)
+                {
+                    //上のマスをひとマス落とす
+                    for (int y = j; y < height; y++)
+                    {
+                        //一個下に落とす処理処理
+                        PuzzleCS.SetMapDate(i, y - 1, PuzzleCS.GetMapDate(i, y));
+                        MSArray[i, y - 1].GetComponent<MSSprite>().ChangeSprite(PuzzleCS.GetMapDate(i, y - 1));
+
+                    }
+                }
             }
         }
     }
@@ -311,7 +336,7 @@ public class HexMap : MonoBehaviour
 
 
     //円と点の当たり判定
-    public bool PointCircleHitCheck(Vector2 point,GameObject circle,float Width)
+    public bool PointCircleHitCheck(Vector2 point, GameObject circle, float Width)
     {
         float a = point.x - circle.transform.position.x;
         float b = point.y - circle.transform.position.y;
@@ -320,10 +345,19 @@ public class HexMap : MonoBehaviour
         if (c <= d * d)
         {
             return true;
-        }else
+        }
+        else
         {
             return false;
         }
     }
 
+
+
+    IEnumerator Wait()
+    {
+        //3秒停止
+        yield return new WaitForSeconds(3);
+
+    }
 }
