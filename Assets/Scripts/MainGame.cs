@@ -37,11 +37,12 @@ public class MainGame : MonoBehaviour
                     Debug.Log("Moveにいく");
                     //タッチできるように
                     Seen = SeenType.Move;
+                    HexMapCS.Scorecount = 0;
                 }
                 else
                 {
                     //消して再度再生
-                    HexMapCS.MSReincarnation();
+                    StartCoroutine("wait");
                 }
                 
 
@@ -70,8 +71,7 @@ public class MainGame : MonoBehaviour
                 }
                 else
                 {
-                    //消して再度再生
-                    HexMapCS.MSReincarnation();
+                    StartCoroutine("wait");
                 }
 
                 break;
@@ -86,5 +86,14 @@ public class MainGame : MonoBehaviour
                 break;
         }
 
+
+    }
+    IEnumerator wait()
+    {
+
+        //消して再度再生
+        HexMapCS.MSReincarnation();
+        //3秒停止
+        yield return new WaitForSeconds(3);
     }
 }

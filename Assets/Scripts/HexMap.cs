@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 //画面内の描画を司る処理
 public class HexMap : MonoBehaviour
@@ -50,6 +51,13 @@ public class HexMap : MonoBehaviour
     //消せるのがあるかないか
     public bool SetCheck;
 
+    //コンボカウンター
+    public int ComboCounter;
+
+    //Scorecount
+    public int Scorecount;
+
+    GameObject ScoreTex;
     // Start is called before the first frame update
     void Start()
     {
@@ -67,6 +75,16 @@ public class HexMap : MonoBehaviour
         GoodRelease = false;
 
         CreateHex();
+
+        Scorecount = 0;
+
+        //スコア表示
+        ScoreTex = Instantiate(DebugText);
+        ScoreTex.transform.SetParent(canvas.transform, false);
+        ScoreTex.GetComponent<Text>().text = "Score:" + Scorecount;
+        ScoreTex.transform.position = Cal_HexPosToViewLocalPos(new Vector2(2.0f, 9.0f));
+        ScoreTex.transform.localScale= new Vector3(2.5f, 2.5f, 2.5f);
+
     }
     public float dt;
     // Update is called once per frame
@@ -204,7 +222,8 @@ public class HexMap : MonoBehaviour
                                 //マスを消して再度再生
                                 PuzzleCS.MatchMS(i, j);
                                 PuzzleCS.MatchMS(GetID[0], GetID[1]);
-                                MSReincarnation();
+                                //消して再度再生
+                                StartCoroutine("wait");
                             }
                         }
                     }
@@ -248,13 +267,16 @@ public class HexMap : MonoBehaviour
                 {
                     if (PuzzleCS.GetDeleteDate(i, j) == 1)
                     {
-                        StartCoroutine("Wait");
-
                         int r = Random.Range(0, 5);
                         MSArray[i, j].GetComponent<MSSprite>().ChangeSprite(r);
+                        MSArray[i, j].GetComponent<MSSprite>().ScaleAnime();
                         // MSArray[i, j].SetActive(false);
                         PuzzleCS.SetMapDate(i, j, r);
                         PuzzleCS.SetDeleteDate(i, j, 0);
+
+                        Scorecount++;
+                        //Debug.Log(""+ Scorecount);
+                        ScoreTex.GetComponent<Text>().text = "Score:" + Scorecount;
                     }
                 }
 
@@ -262,7 +284,7 @@ public class HexMap : MonoBehaviour
         }
     }
 
-
+    //落とす処理
     public void DawnDraw()
     {
 
@@ -353,9 +375,10 @@ public class HexMap : MonoBehaviour
     }
 
 
-
-    IEnumerator Wait()
+    //この中に送らせたい処理を描く
+    IEnumerator wait()
     {
+        MSReincarnation();
         //3秒停止
         yield return new WaitForSeconds(3);
 

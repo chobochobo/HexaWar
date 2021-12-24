@@ -55,8 +55,6 @@ public class Puzzle : MonoBehaviour
        { 1,1,1,1,1,1,1,1,1,1,1,1}
     };
 
-    //コンボカウンター
-    public int ComboCounter;
 
     //各方角に検索、２マスだけ
     public int[,] DD = new int[,]
@@ -71,7 +69,6 @@ public class Puzzle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame

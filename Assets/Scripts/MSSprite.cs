@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class MSSprite : MonoBehaviour
 {
@@ -37,9 +38,16 @@ public class MSSprite : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = MSSperite[index];
     }
 
+
+
+    public void ScaleAnime()
+    {
+        transform.localScale = new Vector3(0, 0, 0);
+        transform.DOScale(0.8f, 1.0f).SetEase(Ease.OutBounce);
+    }
+
     public void ChengeColor(float a)
     {
         GetComponent<SpriteRenderer>().color = new Color(a, a, a);
     }
-
 }
