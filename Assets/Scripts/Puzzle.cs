@@ -9,6 +9,9 @@ public class Puzzle : MonoBehaviour
     private int width = 16;
     private int height = 12;
 
+    public int[] ColeScore = new int[6];
+
+
     //魔石の色の配置
     public int[,] MAPData = new int[16, 12];
     //消えるID
@@ -56,6 +59,24 @@ public class Puzzle : MonoBehaviour
     };
 
 
+    public int getScore(int c)
+    {
+        return ColeScore[c];
+    }
+    public void SetScore(int c,int s)
+    {
+        ColeScore[c] += s;
+    }
+
+    public void InitScore()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            ColeScore[i] = 0;
+        }
+    }
+
+
     //各方角に検索、２マスだけ
     public int[,] DD = new int[,]
       {
@@ -69,6 +90,7 @@ public class Puzzle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        InitScore();
     }
 
     // Update is called once per frame
@@ -126,7 +148,7 @@ public class Puzzle : MonoBehaviour
     //同じ色判定
     public void MatchMS(int IDx, int IDy)
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 3; i++)
         {
             //同じ計算が多いので短略
             int a = (IDx + DD[i, 0]);
@@ -174,6 +196,7 @@ public class Puzzle : MonoBehaviour
                             //同じ色かどうか判定４個目
                             if (MAPData[IDx, IDy] == MAPData[bx, bbx] && OutFlag[bx, bbx] == 0)
                             {
+                                ColeScore[MAPData[IDx, IDy]] += 15;
                                 //元データ
                                 DeleteData[IDx, IDy] = 1;
                                 //一個前削除設定
@@ -187,6 +210,7 @@ public class Puzzle : MonoBehaviour
                             }
                             else//３個め
                             {
+                                ColeScore[MAPData[IDx, IDy]] += 8;
                                 //元データ
                                 DeleteData[IDx, IDy] = 1;
                                 //一個前削除設定
@@ -203,6 +227,7 @@ public class Puzzle : MonoBehaviour
                         //同じ色かどうか判定３個め
                         if (MAPData[IDx, IDy] == MAPData[bx, bbx] && OutFlag[bx, bbx] == 0)
                         {
+                            ColeScore[MAPData[IDx, IDy]] += 8;
                             //元データ
                             DeleteData[IDx, IDy] = 1;
                             //一個前削除設定
@@ -214,6 +239,7 @@ public class Puzzle : MonoBehaviour
                         }
                         else//２個め
                         {
+                            ColeScore[MAPData[IDx, IDy]] += 3;
                             //元データ
                             DeleteData[IDx, IDy] = 1;
                             //一個前削除設定
@@ -222,7 +248,22 @@ public class Puzzle : MonoBehaviour
                             DeleteData[ax, aax] = 1;
                         }
                     }
+                }//一個目
+                else if (MAPData[IDx, IDy] == MAPData[ax, aax] && OutFlag[ax, aax] == 0)
+                {
+                    //同じ色かどうか判定2個め
+                    if (MAPData[IDx, IDy] == MAPData[bx, bbx] && OutFlag[bx, bbx] == 0)
+                    {
+                        ColeScore[MAPData[IDx, IDy]] += 3;
+                        //元データ
+                        DeleteData[IDx, IDy] = 1;
+                        //一個前削除設定
+                        DeleteData[ax, aax] = 1;
+                        //削除設定
+                        DeleteData[bx, bbx] = 1;
+                    }
                 }
+
             }//奇数偶数
             else if (IDy % 2 == 0)
             {
@@ -238,6 +279,7 @@ public class Puzzle : MonoBehaviour
                             //同じ色かどうか判定４個目
                             if (MAPData[IDx, IDy] == MAPData[dx, ddx] && OutFlag[dx, ddx] == 0)
                             {
+                                ColeScore[MAPData[IDx, IDy]] += 15;
                                 //元データ
                                 DeleteData[IDx, IDy] = 1;
                                 //一個前削除設定
@@ -251,6 +293,8 @@ public class Puzzle : MonoBehaviour
                             }
                             else//３個め
                             {
+
+                                ColeScore[MAPData[IDx, IDy]] += 8;
                                 //元データ
                                 DeleteData[IDx, IDy] = 1;
                                 //一個前削除設定
@@ -268,6 +312,7 @@ public class Puzzle : MonoBehaviour
                         //同じ色かどうか判定４個目
                         if (MAPData[IDx, IDy] == MAPData[dx, ddx] && OutFlag[dx, ddx] == 0)
                         {
+                            ColeScore[MAPData[IDx, IDy]] += 8;
                             //元データ
                             DeleteData[IDx, IDy] = 1;
                             //一個前削除設定
@@ -279,6 +324,7 @@ public class Puzzle : MonoBehaviour
                         }//３個め
                         else
                         {
+                            ColeScore[MAPData[IDx, IDy]] += 3;
                             //元データ
                             DeleteData[IDx, IDy] = 1;
                             //一個前削除設定
@@ -287,6 +333,20 @@ public class Puzzle : MonoBehaviour
                             DeleteData[cx, ccx] = 1;
 
                         }
+                    }
+                }//1個め
+                else if (MAPData[IDx, IDy] == MAPData[cx, ccx] && OutFlag[cx, ccx] == 0)
+                {
+                    //同じ色かどうか判定2個目
+                    if (MAPData[IDx, IDy] == MAPData[dx, ddx] && OutFlag[dx, ddx] == 0)
+                    {
+                        ColeScore[MAPData[IDx, IDy]] += 3;
+                        //元データ
+                        DeleteData[IDx, IDy] = 1;
+                        //一個前削除設定
+                        DeleteData[cx, ccx] = 1;
+                        //削除設定
+                        DeleteData[dx, ddx] = 1;
                     }
                 }
             }

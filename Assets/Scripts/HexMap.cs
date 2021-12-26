@@ -82,7 +82,7 @@ public class HexMap : MonoBehaviour
         ScoreTex = Instantiate(DebugText);
         ScoreTex.transform.SetParent(canvas.transform, false);
         ScoreTex.GetComponent<Text>().text = "Score:" + Scorecount;
-        ScoreTex.transform.position = Cal_HexPosToViewLocalPos(new Vector2(2.0f, 9.0f));
+        ScoreTex.transform.position = Cal_HexPosToViewLocalPos(new Vector2(3.0f, 9.0f));
         ScoreTex.transform.localScale= new Vector3(2.5f, 2.5f, 2.5f);
 
     }
@@ -96,6 +96,24 @@ public class HexMap : MonoBehaviour
             dt = 0.0f;
             // Debug.Log("" + MSArray[1, 1].transform.position);
         }
+
+        ScoreTex.GetComponent<Text>().text =
+            "赤:" + PuzzleCS.getScore(0) +
+            "黄:" + PuzzleCS.getScore(1) +
+            "青:" + PuzzleCS.getScore(2) +
+            "緑:" + PuzzleCS.getScore(3) +
+            "紫:" + PuzzleCS.getScore(4);
+
+
+        if(Input.GetKeyDown("space"))
+        {
+            ScoreInit();
+            Debug.Log("space");
+        }
+    }
+    public void ScoreInit()
+    {
+       PuzzleCS.InitScore();
     }
     //初期マップを生成
     public void CreateHex()
@@ -221,9 +239,7 @@ public class HexMap : MonoBehaviour
                                 GoodRelease = true;
                                 //マスを消して再度再生
                                 PuzzleCS.MatchMS(i, j);
-                                PuzzleCS.MatchMS(GetID[0], GetID[1]);
-                                //消して再度再生
-                                StartCoroutine("wait");
+                                PuzzleCS.MatchMS(GetID[0], GetID[1]); 
                             }
                         }
                     }
@@ -255,9 +271,30 @@ public class HexMap : MonoBehaviour
     }
 
 
-    //魔石を消して再構築
+    //Puzzleを消す
+    public void MSDelete()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                //範囲確認
+                if (PuzzleCS.GetOutFlag(i, j) == 0)
+                {
+                    if (PuzzleCS.GetDeleteDate(i, j) == 1)
+                    {
+                        //小さくする
+                        MSArray[i, j].GetComponent<MSSprite>().outScaleAnime();
+                    }
+                }
+            }
+        }
+    }
+
+    //魔石を再構築
     public void MSReincarnation()
     {
+
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
@@ -269,14 +306,11 @@ public class HexMap : MonoBehaviour
                     {
                         int r = Random.Range(0, 5);
                         MSArray[i, j].GetComponent<MSSprite>().ChangeSprite(r);
-                        MSArray[i, j].GetComponent<MSSprite>().ScaleAnime();
+                        MSArray[i, j].GetComponent<MSSprite>().inScaleAnime();
                         // MSArray[i, j].SetActive(false);
                         PuzzleCS.SetMapDate(i, j, r);
-                        PuzzleCS.SetDeleteDate(i, j, 0);
-
-                        Scorecount++;
-                        //Debug.Log(""+ Scorecount);
-                        ScoreTex.GetComponent<Text>().text = "Score:" + Scorecount;
+                        //消したよ処理
+                        PuzzleCS.SetDeleteDate(i, j, 2);
                     }
                 }
 
@@ -284,29 +318,27 @@ public class HexMap : MonoBehaviour
         }
     }
 
-    //落とす処理
-    public void DawnDraw()
+    public void MSReCheck()
     {
-
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                if (PuzzleCS.GetDeleteDate(i, j) == 1)
+                //範囲確認
+                if (PuzzleCS.GetOutFlag(i, j) == 0)
                 {
-                    //上のマスをひとマス落とす
-                    for (int y = j; y < height; y++)
+                    if (PuzzleCS.GetDeleteDate(i, j) == 2)
                     {
-                        //一個下に落とす処理処理
-                        PuzzleCS.SetMapDate(i, y - 1, PuzzleCS.GetMapDate(i, y));
-                        MSArray[i, y - 1].GetComponent<MSSprite>().ChangeSprite(PuzzleCS.GetMapDate(i, y - 1));
+                        //消したよ処理
+                        PuzzleCS.SetDeleteDate(i, j, 0);
 
+                        //周りみて消せるかCheck
+                        PuzzleCS.MatchMS(i, j);
                     }
                 }
             }
         }
     }
-
 
 
     //消すところがあるかCheck
@@ -374,13 +406,4 @@ public class HexMap : MonoBehaviour
         }
     }
 
-
-    //この中に送らせたい処理を描く
-    IEnumerator wait()
-    {
-        MSReincarnation();
-        //3秒停止
-        yield return new WaitForSeconds(3);
-
-    }
 }

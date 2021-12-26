@@ -29,15 +29,15 @@ public class MainGame : MonoBehaviour
        switch(Seen)
         {
             case SeenType.FirstTime:
-                //全マスをCheck
+
                 HexMapCS.MSCheck();
                 //消すところがないか
                 if (HexMapCS.Setflag())
                 {
+                    HexMapCS.ScoreInit();
                     Debug.Log("Moveにいく");
                     //タッチできるように
                     Seen = SeenType.Move;
-                    HexMapCS.Scorecount = 0;
                 }
                 else
                 {
@@ -60,9 +60,14 @@ public class MainGame : MonoBehaviour
 
                 break;
             case SeenType.TouchRelease:
+
                 //全マスをCheck
                 HexMapCS.MSCheck();
-                //消すところがないか
+                Seen = SeenType.DeleteProcess;
+                Debug.Log("DeleteProcessにいく");
+
+                break;
+            case SeenType.DeleteProcess:
                 if (HexMapCS.Setflag())
                 {
                     Debug.Log("Moveにいく");
@@ -72,10 +77,11 @@ public class MainGame : MonoBehaviour
                 else
                 {
                     StartCoroutine("wait");
+
+                    Debug.Log("TouchReleaseにいく");
+                    Seen = SeenType.TouchRelease;
                 }
 
-                break;
-            case SeenType.DeleteProcess:
                 break;
             case SeenType.ReproductionProcess:
                 break;
@@ -91,9 +97,17 @@ public class MainGame : MonoBehaviour
     IEnumerator wait()
     {
 
+        //消す処理
+        HexMapCS.MSDelete();
+        Debug.Log("消す処理");
+        //3秒停止
+        yield return new WaitForSeconds(0.1f);
         //消して再度再生
         HexMapCS.MSReincarnation();
+        Debug.Log("再度再生");
         //3秒停止
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(0.3f);
+        HexMapCS.MSReCheck();
+        Debug.Log("再検索");
     }
 }
