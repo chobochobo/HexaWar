@@ -16,23 +16,25 @@ public class Puzzle : MonoBehaviour
     public int[,] MAPData = new int[16, 12];
     //消えるID
     public int[,] DeleteData = new int[16, 12];
+    //消えるID
+    public int[,] DownData = new int[16, 12];
 
     public int[,] OutFlag = new int[,]
     {
        { 1,1,1,1,1,1,1,1,1,1,1,1},
        { 1,1,1,1,1,1,1,1,1,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
-       { 1,1,0,0,0,0,0,0,0,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
+       { 1,1,0,0,0,0,0,0,1,1,1,1},
        { 1,1,1,1,1,1,1,1,1,1,1,1},
        { 1,1,1,1,1,1,1,1,1,1,1,1}
     };
@@ -58,25 +60,6 @@ public class Puzzle : MonoBehaviour
        { 1,1,1,1,1,1,1,1,1,1,1,1}
     };
 
-
-    public int getScore(int c)
-    {
-        return ColeScore[c];
-    }
-    public void SetScore(int c,int s)
-    {
-        ColeScore[c] += s;
-    }
-
-    public void InitScore()
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            ColeScore[i] = 0;
-        }
-    }
-
-
     //各方角に検索、２マスだけ
     public int[,] DD = new int[,]
       {
@@ -87,16 +70,93 @@ public class Puzzle : MonoBehaviour
         {-1,0,-2,0,-1,0,-2,0 },//左奇数,偶数
         {0,1,-1,2,-1,1,-1,2 }//左上奇数,奇数
       };
+
+
     // Start is called before the first frame update
     void Start()
     {
         InitScore();
+        InitDown();
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+
+    public int GetScore(int c)
+    {
+        return ColeScore[c];
+    }
+    public void SetScore(int c,int s)
+    {
+        ColeScore[c] += s;
+    }
+
+
+    public void InitScore()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            ColeScore[i] = 0;
+        }
+    }
+
+    public void InitDown()
+    {
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                DownData[i, j] = 0;
+            }
+        }
+    }
+    public int GetDoenData(int i,int j)
+    {
+        return DownData[i, j];
+    }
+
+    public void SetDoenData(int i, int j,int set)
+    {
+        DownData[i, j] = set;
+    }
+
+    //落とせるところがあるか
+    public bool CheckDoenData()
+    {
+        bool Check;
+        Check = false;
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (DownData[i, j] == 1)
+                {
+                    Check = true;
+                }
+
+            }
+        }
+        return Check;
+    }
+
+    //DeletDataを反映
+    public void FlagGetDoenData()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (DeleteData[i, j] == 1)
+                {
+                    DownData[i, j] = 1;
+                }
+            }
+        }
     }
 
 
@@ -129,20 +189,6 @@ public class Puzzle : MonoBehaviour
     {
         return DeleteData[i, j];
     }
-    public bool MapOutfieldCheck(int x,int y)
-    {
-        //壁際判定
-        if (x < width && y < height &&
-            x > 0 && y > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
 
 
     //同じ色判定

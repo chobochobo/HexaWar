@@ -40,15 +40,25 @@ public class MSSprite : MonoBehaviour
 
 
 
+    public void MovAnime(Vector3 invec ,Vector3 outvec)
+    {
+        transform.position = invec;
+        transform.DOMove(outvec, 0.5f);
+    }
+
     public void inScaleAnime()
     {
         transform.localScale = new Vector3(0, 0, 0);
-        transform.DOScale(0.8f, 1.0f).SetEase(Ease.OutBounce);
+        transform.DOScale(0.9f, 1.0f).SetEase(Ease.OutBounce);
+    }
+    public void ScaleSet(float scale)
+    {
+        transform.localScale = new Vector3(scale, scale, scale);
     }
     public void outScaleAnime()
     {
         transform.localScale = new Vector3(1, 1, 1);
-        transform.DOScale(0.0f, 0.1f).SetEase(Ease.OutBounce);
+        transform.DOScale(0.0f, 0.3f).SetEase(Ease.OutBounce);
     }
 
     public void ChengeColor(float a)
