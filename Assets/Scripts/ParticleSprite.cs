@@ -26,18 +26,12 @@ public class ParticleSprite : MonoBehaviour
     }
 
 
-    public void start()
+    public void ParticleStart()
     {
         //パーティクルを再生（追加）
         GetComponent<ParticleSystem>().Play();
     }
 
-
-    public void SetColor(Color color)
-    {
-        ParticleSystem.MainModule par = GetComponent<ParticleSystem>().main;
-        par.startColor = color;
-    }
 
     public void ChengeColor(int a)
     {
