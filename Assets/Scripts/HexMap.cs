@@ -12,6 +12,7 @@ public class HexMap : MonoBehaviour
     public GameObject canvas;
     public GameObject MagicStone;
     public GameObject hexPrefabs;
+    public GameObject Particle;
     //配列の大きさを定義。
     private int width = 16;
     private int height = 12;
@@ -47,6 +48,8 @@ public class HexMap : MonoBehaviour
     //PUZZLE呼び出し
     private Puzzle PuzzleCS;
 
+    private ParticleSprite ParticleSpriteCS;
+
 
     //消せるのがあるかないか
     public bool SetCheck;
@@ -65,9 +68,10 @@ public class HexMap : MonoBehaviour
         GetObject = new GameObject();
         //Getフラグを初期化
         GetFlag = false;
-        //魔石の獲得
+        //各クラスの獲得
         MSSpriteCS = FindObjectOfType<MSSprite>();
         PuzzleCS = FindObjectOfType<Puzzle>();
+        ParticleSpriteCS = FindObjectOfType<ParticleSprite>();
 
         //セットフラグ
         SetCheck = false;
@@ -285,6 +289,11 @@ public class HexMap : MonoBehaviour
                     {
                         //小さくする
                         MSArray[i, j].GetComponent<MSSprite>().outScaleAnime();
+                        //パーティクル
+                        GameObject MParticle = Instantiate(Particle);
+                        MParticle.transform.position = MSArray[i, j].transform.position;
+                        MParticle.GetComponent<ParticleSprite>().ChengeColor(PuzzleCS.GetMapDate(i,j));
+                        MParticle.GetComponent<ParticleSprite>().ParticleStart();
                         //落とすフラグを立てる
                         PuzzleCS.SetDoenData(i, j, 1);
                     }

@@ -115,8 +115,8 @@ public class MainGame : MonoBehaviour
         //停止
         yield return new WaitForSeconds(0.5f);
         //消して再度再生
-        HexMapCS.DownMS();
-        //HexMapCS.MSReincarnation();
+        //HexMapCS.DownMS();
+        HexMapCS.MSReincarnation();
         Debug.Log("再度再生");
         //停止
         yield return new WaitForSeconds(1.5f);
