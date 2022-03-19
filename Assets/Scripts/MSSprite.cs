@@ -49,7 +49,7 @@ public class MSSprite : MonoBehaviour
     public void inScaleAnime()
     {
         transform.localScale = new Vector3(0, 0, 0);
-        transform.DOScale(0.9f, 1.0f).SetEase(Ease.OutBounce);
+        transform.DOScale(0.9f, 0.5f).SetEase(Ease.OutBounce);
     }
     public void ScaleSet(float scale)
     {

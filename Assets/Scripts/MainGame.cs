@@ -17,6 +17,7 @@ public class MainGame : MonoBehaviour
     public SeenType Seen = SeenType.FirstTime;
     private HexMap HexMapCS;
 
+    private int ComboCount;
     // Start is called before the first frame update
     void Start()
     {
@@ -62,7 +63,7 @@ public class MainGame : MonoBehaviour
                         //タッチできるように
                         Seen = SeenType.TouchRelease;
                     }
-
+                    HexMapCS.ComboCounter = 0;
                     break;
                 case SeenType.TouchRelease:
 
@@ -81,10 +82,12 @@ public class MainGame : MonoBehaviour
                     }
                     else
                     {
+                        HexMapCS.ComboCounter++;
                         yield return StartCoroutine("wait");
 
                         Debug.Log("TouchReleaseにいく");
                         Seen = SeenType.TouchRelease;
+                        Debug.Log(ComboCount);
                     }
 
                     break;
@@ -113,13 +116,13 @@ public class MainGame : MonoBehaviour
         HexMapCS.MSDelete();
         Debug.Log("消す処理");
         //停止
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         //消して再度再生
         //HexMapCS.DownMS();
         HexMapCS.MSReincarnation();
         Debug.Log("再度再生");
         //停止
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.5f);
         //消せるところがあるかCheck
         HexMapCS.MSReCheck();
         Debug.Log("再検索");

@@ -15,12 +15,12 @@ public class HexMap : MonoBehaviour
     public GameObject Particle;
     //配列の大きさを定義。
     private int width = 16;
-    private int height = 12;
+    private int height = 14;
 
     //六角形の配列
-    public GameObject[,] hexArray = new GameObject[16, 12];
+    public GameObject[,] hexArray = new GameObject[16, 14];
     //魔石の配列
-    public GameObject[,] MSArray = new GameObject[16, 12];
+    public GameObject[,] MSArray = new GameObject[16, 14];
 
     //魔石の大きさ
     private float MS_Width = 0.8f;
@@ -59,8 +59,13 @@ public class HexMap : MonoBehaviour
 
     //Scorecount
     public int Scorecount;
-
+    //スコアの表示(仮)
     GameObject ScoreTex;
+
+    //Comboの表示
+
+
+    GameObject comboTex;
     // Start is called before the first frame update
     void Start()
     {
@@ -86,8 +91,15 @@ public class HexMap : MonoBehaviour
         ScoreTex = Instantiate(DebugText);
         ScoreTex.transform.SetParent(canvas.transform, false);
         ScoreTex.GetComponent<Text>().text = "Score:" + Scorecount;
-        ScoreTex.transform.position = Cal_HexPosToViewLocalPos(new Vector2(3.0f, 9.0f));
-        ScoreTex.transform.localScale= new Vector3(2.5f, 2.5f, 2.5f);
+        ScoreTex.transform.position = Cal_HexPosToViewLocalPos(new Vector2(3.0f, 15.0f));
+        ScoreTex.transform.localScale= new Vector3(5.0f, 5.0f, 5.0f);
+
+        //Combo表示
+        comboTex = Instantiate(DebugText);
+        comboTex.transform.SetParent(canvas.transform, false);
+        comboTex.GetComponent<Text>().text = "Score:" + Scorecount;
+        comboTex.transform.position = Cal_HexPosToViewLocalPos(new Vector2(4.0f, 9.0f));
+        comboTex.transform.localScale = new Vector3(8.0f, 8.0f, 8.0f);
 
     }
     public float dt;
@@ -107,9 +119,18 @@ public class HexMap : MonoBehaviour
             "青:" + PuzzleCS.GetScore(2) +
             "緑:" + PuzzleCS.GetScore(3) +
             "紫:" + PuzzleCS.GetScore(4);
+        if(ComboCounter==0)
+        {
+            comboTex.GetComponent<Text>().text = "";
+        }
+        else
+        {
+            comboTex.GetComponent<Text>().text = ComboCounter + "Combo!";
+        }
 
 
-        if(Input.GetKeyDown("space"))
+
+        if (Input.GetKeyDown("space"))
         {
             ScoreInit();
             Debug.Log("space");
@@ -143,10 +164,10 @@ public class HexMap : MonoBehaviour
                     MSArray[i, j] = MS;
                     PuzzleCS.SetMapDate(i, j, r);
                     //HEXを生成
-                    GameObject hex = Instantiate(hexPrefabs);
-                    hex.transform.position = Cal_HexPosToViewLocalPos(vec2);
-                    hex.name = i + ":" + j;
-                    hexArray[i, j] = hex;
+                    //GameObject hex = Instantiate(hexPrefabs);
+                    //hex.transform.position = Cal_HexPosToViewLocalPos(vec2);
+                    //hex.name = i + ":" + j;
+                    //hexArray[i, j] = hex;
 
                     //DeleteDataを初期化
                     PuzzleCS.SetDeleteDate(i, j, 0);
@@ -373,12 +394,10 @@ public class HexMap : MonoBehaviour
     //落とす処理
     public void DownMS()
     {
-
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-
                 //範囲確認
                 if (PuzzleCS.GetOutFlag(i, j) == 0)
                 {
